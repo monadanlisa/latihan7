@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Latihan 7 Informatika - SMPN 5 Tangerang Kelas 9 (Bu Mona)</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    #app {
+      width: 100%;
+      max-width: 480px;
+      background-color: var(--card-bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .header {
+      background-color: var(--primary);
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .container {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Auth Screen */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    select:disabled {
+      background-color: #f1f5f9;
+    }
+
+    .info-card {
+      background-color: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 16px 0;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:active {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-primary:disabled {
+      background-color: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    /* Quiz Screen */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .timer {
+      font-weight: bold;
+      color: var(--danger);
+      background: #fef2f2;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .question-box {
+      font-size: 1rem;
+      line-height: 1.5;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      text-align: left;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .option-btn.selected {
+      border-color: var(--primary);
+      background-color: #eff6ff;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .nav-buttons button {
+      flex: 1;
+    }
+
+    .grid-toggle-btn {
+      background-color: #f1f5f9;
+      color: var(--text);
+      border: 1px solid var(--border);
+      margin-top: 12px;
+      font-weight: 600;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 4px;
+    }
+
+    .grid-item {
+      padding: 8px 0;
+      text-align: center;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .grid-item.answered {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .grid-item.active {
+      border: 2px solid var(--warning);
+    }
+
+    /* Anti-Cheat Overlay */
+    #warning-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: rgba(0, 0, 0, 0.95);
+      color: white;
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 24px;
+    }
+
+    #warning-overlay h2 {
+      color: var(--danger);
+      margin-bottom: 12px;
+    }
+
+    #warning-overlay button {
+      margin-top: 20px;
+      width: auto;
+      padding: 10px 24px;
+    }
+
+    /* Result Screen */
+    .result-box {
+      text-align: center;
+      padding: 24px 0;
+    }
+
+    .score-badge {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 12px 0;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    .status-badge.lulus {
+      background-color: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge.gagal {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="header">SMPN 5 TANGERANG</div>
+
+  <!-- 1. SCREEN AUTENTIKASI -->
+  <div id="auth-screen" class="container">
+    <h2 style="font-size: 1.1rem; margin-bottom: 4px; text-align: center;">Latihan 7 Informatika Kelas 9</h2>
+    <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 16px;">Pengajar: Bu Mona</p>
+    
+    <div class="form-group">
+      <label for="select-kelas">Pilih Kelas:</label>
+      <select id="select-kelas" onchange="onKelasChange()">
+        <option value="">-- Pilih Kelas --</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="select-nama">Pilih Nama Siswa:</label>
+      <select id="select-nama" disabled onchange="onNamaChange()">
+        <option value="">-- Pilih Nama --</option>
+      </select>
+    </div>
+
+    <div id="student-info" class="info-card hidden"></div>
+
+    <button id="btn-start" class="btn-primary" disabled onclick="startQuiz()">Mulai Latihan 7</button>
+  </div>
+
+  <!-- 2. SCREEN KUIS -->
+  <div id="quiz-screen" class="container hidden">
+    <div class="quiz-header">
+      <span id="question-progress" style="font-weight: 600; font-size: 0.9rem;">Soal 1 dari 30</span>
+      <div class="timer" id="timer-display">45:00</div>
+    </div>
+
+    <div class="question-box" id="question-text">Loading Soal...</div>
+
+    <div class="options-container" id="options-box"></div>
+
+    <div class="nav-buttons">
+      <button class="btn-primary" style="background:#64748b" id="btn-prev" onclick="prevQuestion()">Kembali</button>
+      <button class="btn-primary" id="btn-next" onclick="nextQuestion()">Lanjut</button>
+    </div>
+
+    <button class="grid-toggle-btn" onclick="toggleGrid()">Navigasi Soal (Grid)</button>
+
+    <div id="grid-box" class="grid-container hidden"></div>
+
+    <button class="btn-primary" style="background: var(--success); margin-top: 20px;" onclick="confirmSubmit()">Selesaikan Latihan</button>
+  </div>
+
+  <!-- 3. SCREEN HASIL -->
+  <div id="result-screen" class="container hidden">
+    <div class="result-box">
+      <h3>Hasil Latihan 7 Informatika</h3>
+      <div id="result-score" class="score-badge">0</div>
+      <div id="result-status" class="status-badge">TIDAK LULUS</div>
+
+      <div class="info-card" id="result-summary" style="margin-top:20px; text-align:left;"></div>
+
+      <button class="btn-primary" style="margin-top: 16px;" onclick="resetToLogin()">Kembali ke Halaman Utama</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY PERINGATAN KECURANGAN -->
+<div id="warning-overlay">
+  <h2>PERINGATAN PELANGGARAN!</h2>
+  <p id="warning-text">Anda terdeteksi meninggalkan layar kuis!</p>
+  <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 8px;">Kuis akan otomatis tersubmit jika Anda melanggar lagi.</p>
+  <button class="btn-primary" onclick="dismissWarning()">Saya Mengerti</button>
+</div>
+
+<script>
+  // =========================================================================
+  // CONFIG & DATABASE
+  // =========================================================================
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyTRiwQsdv7acTPH6ny_xCxfkwefTaV2PRlwA8C-wy8HrR_2PPADoXeesuIC3K0ORAyTQ/exec"; 
+  const KKM = 82;
+  const TOTAL_SOAL_DIUJI = 30; // Hanya 30 soal yang dimainkan
+  const WAKTU_KUIS_MENIT = 45;
+
+  // DATA SISWA SMPN 5 TANGERANG KELAS 9 (NILAI AWAL 0 SEMUA)
+  const studentData = [
+    // 9D
+    { kelas: "9D", nama: "ADAM RAHMAN RAMLI", nilaiAwal: 0 },
+    { kelas: "9D", nama: "ADHIRA DWI AZHARI", nilaiAwal: 0 },
+    { kelas: "9D", nama: "ADZKIA REZKY KHOLIFAH UNO", nilaiAwal: 0 },
+    { kelas: "9D", nama: "ALLVIN FRESLY QRISTHIAND SILITONGA", nilaiAwal: 0 },
+    { kelas: "9D", nama: "ALZAYANSYAH MAULANA", nilaiAwal: 0 },
+    { kelas: "9D", nama: "BILAL MAGHRIBI", nilaiAwal: 0 },
+    { kelas: "9D", nama: "BUNGA WIDIYANA PRAMUJI", nilaiAwal: 0 },
+    { kelas: "9D", nama: "FITRIA KARTIKA", nilaiAwal: 0 },
+    { kelas: "9D", nama: "KAFKA RAKAVENDRA ALVARO", nilaiAwal: 0 },
+    { kelas: "9D", nama: "KHAERUL HAMZAH JANUAR", nilaiAwal: 0 },
+    { kelas: "9D", nama: "KIAN PUTRA RAMADHAN", nilaiAwal: 0 },
+    { kelas: "9D", nama: "MUHAMAD RIZKY INDARTO", nilaiAwal: 0 },
+    { kelas: "9D", nama: "MUHAMMAD FARIZ RAMDHANI", nilaiAwal: 0 },
+    { kelas: "9D", nama: "MUHAMMAD ILHAM RAMADHAN", nilaiAwal: 0 },
+    { kelas: "9D", nama: "MUHAMMAD SARIP", nilaiAwal: 0 },
+    { kelas: "9D", nama: "MUHAMMAD SAYYID MUSYAFFA", nilaiAwal: 0 },
+    { kelas: "9D", nama: "NAFIZA NUR HANDAYANI", nilaiAwal: 0 },
+    { kelas: "9D", nama: "NAYLA PUTRI RAMADHANI", nilaiAwal: 0 },
+    { kelas: "9D", nama: "NURIL MUHAMMAD GHIFARI", nilaiAwal: 0 },
+    { kelas: "9D", nama: "NURUL AZIZAH", nilaiAwal: 0 },
+    { kelas: "9D", nama: "RAMA DEA", nilaiAwal: 0 },
+    { kelas: "9D", nama: "RAMADHAN EKA PUTRA", nilaiAwal: 0 },
+    { kelas: "9D", nama: "REYHAND PANJI PRATAMA", nilaiAwal: 0 },
+    { kelas: "9D", nama: "RIDHO ABDUL KHOLIK", nilaiAwal: 0 },
+    { kelas: "9D", nama: "YUYUN YUNIARTI", nilaiAwal: 0 },
+    { kelas: "9D", nama: "ZELDA MAULIDYAH", nilaiAwal: 0 },
+
+    // 9E
+    { kelas: "9E", nama: "ABDUL ROHMAN", nilaiAwal: 0 },
+    { kelas: "9E", nama: "ABIGAELL SOPHIA MAMBRASAR WAGIU", nilaiAwal: 0 },
+    { kelas: "9E", nama: "AFIKA PUTRI FEBRIANI", nilaiAwal: 0 },
+    { kelas: "9E", nama: "AJI SAKSENO MAULANA NOVAL", nilaiAwal: 0 },
+    { kelas: "9E", nama: "ANGGIE DAMAYANTI", nilaiAwal: 0 },
+    { kelas: "9E", nama: "ANISA MAULIDISKA", nilaiAwal: 0 },
+    { kelas: "9E", nama: "ANJELINA SUAIB", nilaiAwal: 0 },
+    { kelas: "9E", nama: "AZKA GHANI HANAFI", nilaiAwal: 0 },
+    { kelas: "9E", nama: "DAVID MAULANA", nilaiAwal: 0 },
+    { kelas: "9E", nama: "DEA AINUN SOFI", nilaiAwal: 0 },
+    { kelas: "9E", nama: "DEDEH NURHASANAH", nilaiAwal: 0 },
+    { kelas: "9E", nama: "DELANO RAYHAN ANGGORO", nilaiAwal: 0 },
+    { kelas: "9E", nama: "DINDA BINTANG KINASIH", nilaiAwal: 0 },
+    { kelas: "9E", nama: "FITRI HANAFILAH", nilaiAwal: 0 },
+    { kelas: "9E", nama: "HELLEND EDELYN ARYANTO", nilaiAwal: 0 },
+    { kelas: "9E", nama: "HOSEA EZEKIEL DEPARY", nilaiAwal: 0 },
+    { kelas: "9E", nama: "JOSUA RAYMOND HUTASOIT", nilaiAwal: 0 },
+    { kelas: "9E", nama: "JUNELVEN KRISTIAN FA'OT", nilaiAwal: 0 },
+    { kelas: "9E", nama: "KHANZYAH AL ZAIRAHI NURUL FATWAH", nilaiAwal: 0 },
+    { kelas: "9E", nama: "MUHAMAD ILHAMSYAH AL BUKHORY", nilaiAwal: 0 },
+    { kelas: "9E", nama: "MUHAMMAD AL FATICH", nilaiAwal: 0 },
+    { kelas: "9E", nama: "MUHAMMAD FARGA RABANI", nilaiAwal: 0 },
+    { kelas: "9E", nama: "MUHAMMAD FAUZAAN FIRMANSYAH", nilaiAwal: 0 },
+    { kelas: "9E", nama: "NAJWA KHUMAIRA", nilaiAwal: 0 },
+    { kelas: "9E", nama: "NAURA SOVIANA PUTRI", nilaiAwal: 0 },
+    { kelas: "9E", nama: "NOVAL SAPTA NARENDRA", nilaiAwal: 0 },
+    { kelas: "9E", nama: "NUR LATHIPAH", nilaiAwal: 0 },
+    { kelas: "9E", nama: "NURUL SYIFA NURROHMAN", nilaiAwal: 0 },
+    { kelas: "9E", nama: "RIDHO FIRMANSYAH", nilaiAwal: 0 },
+    { kelas: "9E", nama: "ZILLA TIFARA", nilaiAwal: 0 },
+
+    // 9F
+    { kelas: "9F", nama: "ALYSSA AZZAHRA WANTORO", nilaiAwal: 0 },
+    { kelas: "9F", nama: "AMANDA AULIA RACHMAWATI", nilaiAwal: 0 },
+    { kelas: "9F", nama: "BAGAS FERDIANSYAH", nilaiAwal: 0 },
+    { kelas: "9F", nama: "CINTA KHALISHAH MAULANA", nilaiAwal: 0 },
+    { kelas: "9F", nama: "EGI NUH ROHMAN", nilaiAwal: 0 },
+    { kelas: "9F", nama: "HABIB ADHA FADILA", nilaiAwal: 0 },
+    { kelas: "9F", nama: "IZDIHAR JUNIA FARHAH", nilaiAwal: 0 },
+    { kelas: "9F", nama: "JUNI NUR SYAKINA", nilaiAwal: 0 },
+    { kelas: "9F", nama: "KAILA FITRI AZ ZAHRA", nilaiAwal: 0 },
+    { kelas: "9F", nama: "LATIFAH MAULIDINA", nilaiAwal: 0 },
+    { kelas: "9F", nama: "LUCKY WIHARDANDI", nilaiAwal: 0 },
+    { kelas: "9F", nama: "LUTFI ALDIANSYAH", nilaiAwal: 0 },
+    { kelas: "9F", nama: "MAULANA BAGHDAT NABAWI", nilaiAwal: 0 },
+    { kelas: "9F", nama: "MUHAMMAD AZAM ZAHRAN", nilaiAwal: 0 },
+    { kelas: "9F", nama: "MUHAMMAD DENDI DARMAWANSYAH", nilaiAwal: 0 },
+    { kelas: "9F", nama: "MUHAMMAD DZIKRI DARMAWAN", nilaiAwal: 0 },
+    { kelas: "9F", nama: "MUHAMMAD JUAN BACHRI", nilaiAwal: 0 },
+    { kelas: "9F", nama: "MUHAMMAD RAFFA ZAHRANDITA", nilaiAwal: 0 },
+    { kelas: "9F", nama: "NAKILA RACHMAWATI PUTRI", nilaiAwal: 0 },
+    { kelas: "9F", nama: "NAURA RIDHA MALIHAH", nilaiAwal: 0 },
+    { kelas: "9F", nama: "PUTRI NUR AINI", nilaiAwal: 0 },
+    { kelas: "9F", nama: "REINA RAHMAWATI", nilaiAwal: 0 },
+    { kelas: "9F", nama: "RIFAA MAULIDA", nilaiAwal: 0 },
+    { kelas: "9F", nama: "SABILA NISYA BASTIAN", nilaiAwal: 0 },
+    { kelas: "9F", nama: "SALWA LATHIFAH", nilaiAwal: 0 },
+    { kelas: "9F", nama: "TATA NURTAMALA", nilaiAwal: 0 },
+    { kelas: "9F", nama: "VICKY PRATAMA RUNADI", nilaiAwal: 0 },
+    { kelas: "9F", nama: "WAFRI ADIS AKMAL", nilaiAwal: 0 },
+    { kelas: "9F", nama: "ZANETA ADELIA IRAWAN", nilaiAwal: 0 },
+
+    // 9G
+    { kelas: "9G", nama: "ACHMAD FAIRUS MIRZA ATHALLAH", nilaiAwal: 0 },
+    { kelas: "9G", nama: "ANDI NURVIAN FATKHUROHMAN", nilaiAwal: 0 },
+    { kelas: "9G", nama: "ARYA DHARMA PUTRA", nilaiAwal: 0 },
+    { kelas: "9G", nama: "AZIZI SARUNI ANUGRAH RAHMAN", nilaiAwal: 0 },
+    { kelas: "9G", nama: "BIMA RISKY APRILIANSYAH", nilaiAwal: 0 },
+    { kelas: "9G", nama: "CHAROLINE RAHAYU  AL-ZAHRA", nilaiAwal: 0 },
+    { kelas: "9G", nama: "DAFFA HAIDIR AL-KAHFI", nilaiAwal: 0 },
+    { kelas: "9G", nama: "DINDA AYUNING SULISTYAWATI", nilaiAwal: 0 },
+    { kelas: "9G", nama: "FADILAH AULIA RAHMA", nilaiAwal: 0 },
+    { kelas: "9G", nama: "FAHRI ADAIR AHMAD", nilaiAwal: 0 },
+    { kelas: "9G", nama: "FAIQA NAJMA MUHARRAMI", nilaiAwal: 0 },
+    { kelas: "9G", nama: "FAKHRY AL-GIFARY SETIAWAN", nilaiAwal: 0 },
+    { kelas: "9G", nama: "IBRAHIM RAMADHAN", nilaiAwal: 0 },
+    { kelas: "9G", nama: "JIHAN NAURI", nilaiAwal: 0 },
+    { kelas: "9G", nama: "JOEAN VALENTINO", nilaiAwal: 0 },
+    { kelas: "9G", nama: "LAYLA FITRIANA ZULKARNAEN", nilaiAwal: 0 },
+    { kelas: "9G", nama: "LISA AZAHIRA", nilaiAwal: 0 },
+    { kelas: "9G", nama: "MAULANA SYAFIQ ADYATTA", nilaiAwal: 0 },
+    { kelas: "9G", nama: "MONIKA NUR OKTAVIA", nilaiAwal: 0 },
+    { kelas: "9G", nama: "MUHAMAD DEANDRA ADZIKRA HAFI", nilaiAwal: 0 },
+    { kelas: "9G", nama: "MUHAMAD RAKA AL FATHIR", nilaiAwal: 0 },
+    { kelas: "9G", nama: "MUHAMMAD FAUZAN NAZARIO", nilaiAwal: 0 },
+    { kelas: "9G", nama: "NABILA AULIA ZAHRA", nilaiAwal: 0 },
+    { kelas: "9G", nama: "NADIA NUR FITRIANI", nilaiAwal: 0 },
+    { kelas: "9G", nama: "PUTRA KURNIAWAN", nilaiAwal: 0 },
+    { kelas: "9G", nama: "REVDA ELVAN HIDAYAT", nilaiAwal: 0 },
+    { kelas: "9G", nama: "REZA ANUGRAH RAMADANI", nilaiAwal: 0 },
+    { kelas: "9G", nama: "SALSA CHANDRA KINASIH", nilaiAwal: 0 },
+    { kelas: "9G", nama: "SYIFA NUR RAMADHANI", nilaiAwal: 0 },
+    { kelas: "9G", nama: "SYUHBATUL IMAN", nilaiAwal: 0 },
+    { kelas: "9G", nama: "THORIQ RASYID AMANTA POHAN", nilaiAwal: 0 },
+
+    // 9H
+    { kelas: "9H", nama: "AL VITYAZ KABILI MUBAROK", nilaiAwal: 0 },
+    { kelas: "9H", nama: "ARYO BUDI NASHIDIK", nilaiAwal: 0 },
+    { kelas: "9H", nama: "DENDY SURYADINATA", nilaiAwal: 0 },
+    { kelas: "9H", nama: "DEWI ERNI YANA", nilaiAwal: 0 },
+    { kelas: "9H", nama: "FAIRUL NIZAM RAMADHAN", nilaiAwal: 0 },
+    { kelas: "9H", nama: "FAIRY ANANDA LATISYA", nilaiAwal: 0 },
+    { kelas: "9H", nama: "FELYCHIA JENNIFER", nilaiAwal: 0 },
+    { kelas: "9H", nama: "GATAN RAHMAT ALFAUZI", nilaiAwal: 0 },
+    { kelas: "9H", nama: "HANIFA JULICA", nilaiAwal: 0 },
+    { kelas: "9H", nama: "KAYNAN SUWANDI", nilaiAwal: 0 },
+    { kelas: "9H", nama: "LUH GEDE ANANDITA ASIH SAWITRI", nilaiAwal: 0 },
+    { kelas: "9H", nama: "MAULANA IBNU AFFAN", nilaiAwal: 0 },
+    { kelas: "9H", nama: "MEGA AVIYANTI", nilaiAwal: 0 },
+    { kelas: "9H", nama: "MUHAMAD AKBAR AZAMI", nilaiAwal: 0 },
+    { kelas: "9H", nama: "MUHAMAD ILHAM SYAHBANA", nilaiAwal: 0 },
+    { kelas: "9H", nama: "MUHAMAD RIZIQ ZULFIKRI", nilaiAwal: 0 },
+    { kelas: "9H", nama: "MUHAMMAD FADLLI SYAHRI AZHAR", nilaiAwal: 0 },
+    { kelas: "9H", nama: "MUHAMMAD FAHRI", nilaiAwal: 0 },
+    { kelas: "9H", nama: "MUHAMMAD HALIM DARMAWAN", nilaiAwal: 0 },
+    { kelas: "9H", nama: "NAJMATUL LAILIYAH", nilaiAwal: 0 },
+    { kelas: "9H", nama: "OKHAFIYYA NIKE AL-MUKHTARI", nilaiAwal: 0 },
+    { kelas: "9H", nama: "RAYHAN NADZMI", nilaiAwal: 0 },
+    { kelas: "9H", nama: "SHAKAYLA RAISYA NUR AAFIYAH", nilaiAwal: 0 },
+    { kelas: "9H", nama: "SHELA APRYLLIA", nilaiAwal: 0 },
+    { kelas: "9H", nama: "ZAHRA RADYSTI NUGROHO", nilaiAwal: 0 },
+
+    // 9I
+    { kelas: "9I", nama: "ABDUL FATTAH NUR FACHRIZI", nilaiAwal: 0 },
+    { kelas: "9I", nama: "ALISYA SAFITRI", nilaiAwal: 0 },
+    { kelas: "9I", nama: "ARDHAN ARDIANSYAH", nilaiAwal: 0 },
+    { kelas: "9I", nama: "AZIIZ AL'BILLAH", nilaiAwal: 0 },
+    { kelas: "9I", nama: "ERLANGGA HABIBIE RAMADHAN", nilaiAwal: 0 },
+    { kelas: "9I", nama: "FAJRI AN NUR", nilaiAwal: 0 },
+    { kelas: "9I", nama: "HAIDAR FAHMI MAHAMMED", nilaiAwal: 0 },
+    { kelas: "9I", nama: "HANNA SYAHIDAH", nilaiAwal: 0 },
+    { kelas: "9I", nama: "LUTFIYANA SYAKIRAH ISKANDAR", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MAHESWARI ANINDHA TAWANGSASI", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MIFTAKHUL JANNAH", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MOZA ALODIE ASHABIRA", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MUHAMMAD AKBAR ABIMANYU", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MUHAMMAD AZIM ZAIYAN", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MUHAMMAD DAREL AL AHZA", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MUHAMMAD FAJAR RAMADHAN", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MUHAMMAD FARHAN RAMADHAN ARIFIN", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MUHAMMAD FAZDRIANSYAH", nilaiAwal: 0 },
+    { kelas: "9I", nama: "MUHAMMAD HARITS LATHIP HARAHAP", nilaiAwal: 0 },
+    { kelas: "9I", nama: "NABIL FADHLAN SETIAWAN", nilaiAwal: 0 },
+    { kelas: "9I", nama: "NENG NADIVAH NURMANAH", nilaiAwal: 0 },
+    { kelas: "9I", nama: "NUGI FERDIANSYAH", nilaiAwal: 0 },
+    { kelas: "9I", nama: "RAISYA ANINDYA ADILLAH", nilaiAwal: 0 },
+    { kelas: "9I", nama: "RAKA ARRASYID", nilaiAwal: 0 },
+    { kelas: "9I", nama: "RIZA AZZUFA ERLI", nilaiAwal: 0 },
+    { kelas: "9I", nama: "RIZIK SA'BAN MUBAROK", nilaiAwal: 0 },
+    { kelas: "9I", nama: "SAFA AINUN", nilaiAwal: 0 },
+    { kelas: "9I", nama: "SAFIRA NUR ALIKA", nilaiAwal: 0 },
+    { kelas: "9I", nama: "SAKQNAH SEPTIANA ALYAROKH", nilaiAwal: 0 },
+    { kelas: "9I", nama: "TITO BIMA AL-RIZKY", nilaiAwal: 0 },
+    { kelas: "9I", nama: "ZHARIIFAH NAILA RAMADHANI", nilaiAwal: 0 },
+
+    // 9J
+    { kelas: "9J", nama: "ADIYANSAH", nilaiAwal: 0 },
+    { kelas: "9J", nama: "ADZKHIA AWALIA ASYSYAFA", nilaiAwal: 0 },
+    { kelas: "9J", nama: "AISHARA MAKHAILA RUBBY", nilaiAwal: 0 },
+    { kelas: "9J", nama: "AISYAH AILA VARISHA", nilaiAwal: 0 },
+    { kelas: "9J", nama: "ALVINO APRILIAN AKBAR", nilaiAwal: 0 },
+    { kelas: "9J", nama: "AMIRA AKIFA GHAZIYA", nilaiAwal: 0 },
+    { kelas: "9J", nama: "ASYAM MUHAMMAD DAFFI", nilaiAwal: 0 },
+    { kelas: "9J", nama: "ASYIFAH ANGRAENI", nilaiAwal: 0 },
+    { kelas: "9J", nama: "AZIRA KEYSHA RAHADATUL'AISY", nilaiAwal: 0 },
+    { kelas: "9J", nama: "DETALIA SENANDUNG NACITA", nilaiAwal: 0 },
+    { kelas: "9J", nama: "DINDA LETISYA PUTRI", nilaiAwal: 0 },
+    { kelas: "9J", nama: "FAIZHYAR AL ANHAR", nilaiAwal: 0 },
+    { kelas: "9J", nama: "FATIA IZNI VIRZINIA", nilaiAwal: 0 },
+    { kelas: "9J", nama: "KALYANA TANTRI", nilaiAwal: 0 },
+    { kelas: "9J", nama: "MAULANA FARIQ DHUHA", nilaiAwal: 0 },
+    { kelas: "9J", nama: "MOHAMMAD ASKA SAPUTRA", nilaiAwal: 0 },
+    { kelas: "9J", nama: "MUHAMAD ISMAIL", nilaiAwal: 0 },
+    { kelas: "9J", nama: "MUHAMMAD AGRA BACHTIAR", nilaiAwal: 0 },
+    { kelas: "9J", nama: "MUHAMMAD FADHLAN", nilaiAwal: 0 },
+    { kelas: "9J", nama: "MUHAMMAD HAFIIZH MUZHAFFAR", nilaiAwal: 0 },
+    { kelas: "9J", nama: "MUHAMMAD HASBI", nilaiAwal: 0 },
+    { kelas: "9J", nama: "MUHAMMAD RESTU MAULANA", nilaiAwal: 0 },
+    { kelas: "9J", nama: "NADINE KINANTI PUTRI", nilaiAwal: 0 },
+    { kelas: "9J", nama: "NAOMI HOSIANNA SIMBOLON", nilaiAwal: 0 },
+    { kelas: "9J", nama: "RAJAA AAQILA SAPTIYANT", nilaiAwal: 0 },
+    { kelas: "9J", nama: "RAKA ADITIA SUNARTA", nilaiAwal: 0 },
+    { kelas: "9J", nama: "RAMDANI ABDULLAH", nilaiAwal: 0 },
+    { kelas: "9J", nama: "SEFTIYANI YUKI ANDINI", nilaiAwal: 0 },
+    { kelas: "9J", nama: "SHEEHAN AZKA ALFAIS", nilaiAwal: 0 },
+    { kelas: "9J", nama: "SYAHLA NAZHIIFA ZULFA UBRUSUN", nilaiAwal: 0 },
+    { kelas: "9J", nama: "SYAKILLA RAMADHANI ADISTY", nilaiAwal: 0 },
+    { kelas: "9J", nama: "WIDIYA SANTIKA DEWI", nilaiAwal: 0 }
+  ];
+
+  // BANK SOAL LATIHAN 7 (60 SOAL LOGIKA PYTHON)
+  const rawQuizData = [
+    { id: 1, q: "Jika x = 6 dan y = 4, berapakah hasil dari ekspresi logika: (x > y) and (y > 0)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 2, q: "Jika x = 6 dan y = 4, berapakah hasil dari ekspresi logika: (x == y) or (x > 5)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 3, q: "Jika x = 6 dan y = 4, berapakah hasil dari ekspresi logika: not (x < y)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 4, q: "Jika x = 6 dan y = 4, berapakah hasil dari ekspresi logika: (x != 6) or (y >= 5)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 5, q: "Jika x = 6 dan y = 4, berapakah hasil dari ekspresi logika: (x <= 6) and (y == 4)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 6, q: "Jika x = 6 dan y = 4, berapakah hasil dari ekspresi logika: not ((x > 5) and (y > 4))?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 7, q: "Jika x = 6 dan y = 4, berapakah hasil dari ekspresi logika: (x + y == 10) and (x > y)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 8, q: "Jika x = 6 dan y = 4, berapakah hasil dari ekspresi logika: (x - y == 3) or (x * y == 20)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 9, q: "Jika a = 7, b = 7, dan c = 2, berapakah hasil dari ekspresi: (a == b) and (c < a)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 10, q: "Jika a = 7, b = 7, dan c = 2, berapakah hasil dari ekspresi: (a != b) or (c > 5)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 11, q: "Jika a = 7, b = 7, dan c = 2, berapakah hasil dari ekspresi: not (a == b)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 12, q: "Jika a = 7, b = 7, dan c = 2, berapakah hasil dari ekspresi: (a > c) and not (b < c)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 13, q: "Jika a = 7, b = 7, dan c = 2, berapakah hasil dari ekspresi: (c >= 2) and (a < 5)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 14, q: "Jika a = 7, b = 7, dan c = 2, berapakah hasil dari ekspresi: (a < c) or (b == 7)?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 15, q: "Jika a = 7, b = 7, dan c = 2, berapakah hasil dari ekspresi: not ((a != b) or (c == 2))?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 16, q: "Syarat lulus: nilai >= 75 DAN hadir >= 80. Jika nilai = 70 dan hadir = 90, apakah siswa lulus?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 17, q: "Syarat diskon: belanja > 100000 ATAU member == True. Jika belanja = 120000 dan member = False, apakah mendapat diskon?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 18, q: "Syarat naik wahana: tinggi >= 120 DAN umur >= 6. Jika tinggi = 125 dan umur = 5, apakah boleh naik?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 19, q: "Kondisi cuaca: hujan = False. Berapakah hasil ekspresi: not hujan?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 20, q: "Syarat seleksi: kelas == 9 DAN BUKAN (nilai < 70). Jika kelas = 9 dan nilai = 80, apakah lolos seleksi?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 21, q: "Operator AND pada Python akan menghasilkan True jika...", opt: ["A. Salah satu kondisi benar", "B. Kedua kondisi benar", "C. Kedua kondisi salah", "D. Salah satu kondisi salah"], ans: 1 },
+    { id: 22, q: "Operator OR pada Python akan menghasilkan False hanya jika...", opt: ["A. Kedua kondisi benar", "B. Salah satu kondisi benar", "C. Kedua kondisi salah", "D. Salah satu kondisi salah"], ans: 2 },
+    { id: 23, q: "Hasil dari not True pada pemrograman Python adalah...", opt: ["A. True", "B. False", "C. 0", "D. Error"], ans: 1 },
+    { id: 24, q: "Operator perbandingan 'sama dengan' pada Python ditulis dengan simbol...", opt: ["A. =", "B. ==", "C. !=", "D. =>"], ans: 1 },
+    { id: 25, q: "Operator perbandingan 'tidak sama dengan' pada Python ditulis dengan simbol...", opt: ["A. <>", "B. =!", "C. !=", "D. =="], ans: 2 },
+    { id: 26, q: "Operator >= pada Python memiliki arti...", opt: ["A. Lebih besar atau sama dengan", "B. Lebih kecil atau sama dengan", "C. Tidak sama dengan", "D. Sama dengan"], ans: 0 },
+    { id: 27, q: "Tipe data yang hanya bernilai True atau False dalam Python disebut...", opt: ["A. Integer", "B. String", "C. Float", "D. Boolean"], ans: 3 },
+    { id: 28, q: "Operator logika yang secara resmi digunakan di dalam Python adalah...", opt: ["A. &&, ||, !", "B. and, or, not", "C. plus, minus, times", "D. if, else, while"], ans: 1 },
+    { id: 29, q: "Perbedaan utama antara operator = dan == dalam Python adalah...", opt: ["A. = untuk memberi nilai variabel, == untuk membandingkan nilai", "B. Keduanya memiliki fungsi yang sama", "C. = untuk membandingkan nilai, == untuk memberi nilai variabel", "D. Keduanya digunakan khusus operasi perkalian"], ans: 0 },
+    { id: 30, q: "Fungsi utama dari tabel kebenaran dalam logika matematika/pemrograman adalah...", opt: ["A. Menggambar grafik fungsi", "B. Menunjukkan semua kemungkinan hasil operasi logika", "C. Menyimpan data ke database", "D. Mengubah teks menjadi angka"], ans: 1 },
+    { id: 31, q: "Berapakah hasil dari evaluasi ekspresi: 5 == 5 ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 32, q: "Berapakah hasil dari evaluasi ekspresi: 7 != 7 ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 33, q: "Berapakah hasil dari evaluasi ekspresi: 6 >= 9 ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 34, q: "Berapakah hasil dari evaluasi ekspresi: 3 <= 3 ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 35, q: "Berapakah hasil dari evaluasi ekspresi: (2 == 3) or (3 < 4) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 36, q: "Berapakah hasil dari evaluasi ekspresi: (5 > 2) and (4 <= 4) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 37, q: "Berapakah hasil dari evaluasi ekspresi: (6 < 3) and (2 == 2) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 38, q: "Berapakah hasil dari evaluasi ekspresi: not (8 > 10) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 39, q: "Berapakah hasil dari evaluasi ekspresi: not (4 == 4) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 40, q: "Berapakah hasil dari evaluasi ekspresi: (3 != 3) or (5 >= 6) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 41, q: "Berapakah hasil dari evaluasi ekspresi: (10 >= 10) and (7 < 9) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 42, q: "Berapakah hasil dari evaluasi ekspresi: (4 > 9) or (2 == 3) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 43, q: "Berapakah hasil dari evaluasi ekspresi: not (2 < 5) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 44, q: "Berapakah hasil dari evaluasi ekspresi: (1 < 2) and (2 < 3) and (3 < 4) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 45, q: "Berapakah hasil dari evaluasi ekspresi: (9 == 9) or (1 > 5) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 46, q: "Berapakah hasil dari evaluasi ekspresi: not (3 > 8) and (6 == 6) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 47, q: "Berapakah hasil dari evaluasi ekspresi: (7 != 7) or not (2 == 3) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 48, q: "Pada perbandingan string di Python, berapakah hasil dari: 'Apple' < 'Banana' ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 0 },
+    { id: 49, q: "Berapakah hasil dari perbandingan string berikut: 'Hello' == 'World' ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 50, q: "Berapakah hasil dari ekspresi logika: not ((2 > 1) and (3 > 2)) ?", opt: ["A. True", "B. False", "C. Error", "D. None"], ans: 1 },
+    { id: 51, q: "Rina lulus jika nilai >= 75 and hadir >= 80. Nilai Rina 80, hadirnya 90. Apakah Rina lulus?", opt: ["A. Ya", "B. Tidak", "C. Ragu-ragu", "D. Tidak dapat ditentukan"], ans: 0 },
+    { id: 52, q: "Diskon diberikan jika belanja > 100000 or member. Andi belanja 80000 dan bukan member. Apakah Andi dapat diskon?", opt: ["A. Ya", "B. Tidak", "C. Ragu-ragu", "D. Tidak dapat ditentukan"], ans: 1 },
+    { id: 53, q: "Boleh masuk jika tinggi >= 120 and umur >= 6. Dito tingginya 125 dan umurnya 5. Apakah Dito boleh masuk?", opt: ["A. Ya", "B. Tidak", "C. Ragu-ragu", "D. Tidak dapat ditentukan"], ans: 1 },
+    { id: 54, q: "Ani naik sepeda jika not hujan. Hari ini hujan (hujan = True). Apakah Ani naik sepeda?", opt: ["A. Ya", "B. Tidak", "C. Ragu-ragu", "D. Tidak dapat ditentukan"], ans: 1 },
+    { id: 55, q: "Boleh ikut lomba jika kelas == 9 and not (nilai < 70). Rudi kelas 9, nilainya 80. Apakah Rudi boleh ikut?", opt: ["A. Ya", "B. Tidak", "C. Ragu-ragu", "D. Tidak dapat ditentukan"], ans: 0 },
+    { id: 56, q: "Apa output dari perintah Python berikut: print(5 > 3) ?", opt: ["A. True", "B. False", "C. 5", "D. Error"], ans: 0 },
+    { id: 57, q: "Apa output dari kode Python berikut?\nx = 10\nprint(x == 10 and x < 5)", opt: ["A. True", "B. False", "C. 10", "D. Error"], ans: 1 },
+    { id: 58, q: "Apa output dari kode Python berikut?\na = 3\nb = 8\nprint(not (a > b))", opt: ["A. True", "B. False", "C. 3", "D. Error"], ans: 0 },
+    { id: 59, q: "Penulisan kondisi 'if' yang benar dalam bahasa pemrograman Python adalah...", opt: ["A. if x > 5 AND y < 3:", "B. if x > 5 and y < 3:", "C. if x > 5 && y < 3:", "D. if x > 5 then y < 3:"], ans: 1 },
+    { id: 60, q: "Apa output dari perintah Python berikut: print(4 != 4 or 2 < 1) ?", opt: ["A. True", "B. False", "C. 4", "D. Error"], ans: 1 }
+  ];
+
+  // =========================================================================
+  // APP STATE & LOGIC
+  // =========================================================================
+  let currentStudent = null;
+  let quizQuestions = [];
+  let userAnswers = {};
+  let currentQuestionIdx = 0;
+  let timerInterval = null;
+  let timeRemaining = WAKTU_KUIS_MENIT * 60;
+  let violationCount = 0;
+
+  window.onload = function() {
+    populateKelasDropdown();
+    checkLocalStorageOnLoad();
+    setupSecurityListeners();
+  };
+
+  function populateKelasDropdown() {
+    const kelasSet = [...new Set(studentData.map(s => s.kelas))];
+    const selectKelas = document.getElementById('select-kelas');
+    selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+    kelasSet.forEach(k => {
+      selectKelas.innerHTML += `<option value="${k}">${k}</option>`;
+    });
+  }
+
+  function onKelasChange() {
+    const kelas = document.getElementById('select-kelas').value;
+    const selectNama = document.getElementById('select-nama');
+    const infoCard = document.getElementById('student-info');
+    const btnStart = document.getElementById('btn-start');
+
+    selectNama.innerHTML = '<option value="">-- Pilih Nama --</option>';
+    infoCard.classList.add('hidden');
+    btnStart.disabled = true;
+
+    if (!kelas) {
+      selectNama.disabled = true;
+      return;
+    }
+
+    const filteredStudents = studentData.filter(s => s.kelas === kelas);
+    filteredStudents.forEach(s => {
+      selectNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
+    });
+    selectNama.disabled = false;
+  }
+
+  function onNamaChange() {
+    const kelas = document.getElementById('select-kelas').value;
+    const nama = document.getElementById('select-nama').value;
+    const infoCard = document.getElementById('student-info');
+    const btnStart = document.getElementById('btn-start');
+
+    if (!nama) {
+      infoCard.classList.add('hidden');
+      btnStart.disabled = true;
+      return;
+    }
+
+    currentStudent = studentData.find(s => s.kelas === kelas && s.nama === nama);
+
+    if (currentStudent) {
+      infoCard.innerHTML = `
+        <strong>Mata Pelajaran:</strong> Informatika (Logika Python)<br>
+        <strong>Sekolah:</strong> SMPN 5 Tangerang (Bu Mona)<br>
+        <strong>Nilai Awal:</strong> ${currentStudent.nilaiAwal}<br>
+        <strong>Target KKM:</strong> ${KKM}<br>
+        <strong>Status:</strong> Siap mengerjakan Latihan 7
+      `;
+      infoCard.classList.remove('hidden');
+      btnStart.disabled = false;
+      btnStart.innerText = "Mulai Latihan 7";
+    }
+  }
+
+  function shuffleArray(array) {
+    let arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function startQuiz() {
+    requestFullScreen();
+
+    // Acak 60 soal dan ambil 30 soal saja untuk dimainkan
+    const shuffledRaw = shuffleArray(rawQuizData).slice(0, TOTAL_SOAL_DIUJI);
+    
+    quizQuestions = shuffledRaw.map(q => {
+      let optionsWithKey = q.opt.map((optText, index) => ({
+        text: optText,
+        isCorrect: index === q.ans
+      }));
+      let shuffledOptions = shuffleArray(optionsWithKey);
+      return { q: q.q, options: shuffledOptions };
+    });
+
+    userAnswers = {};
+    timeRemaining = WAKTU_KUIS_MENIT * 60;
+    currentQuestionIdx = 0;
+    violationCount = 0;
+
+    saveStateToLocalStorage();
+    initQuizUI();
+  }
+
+  function initQuizUI() {
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('quiz-screen').classList.remove('hidden');
+
+    renderQuestion();
+    renderGrid();
+    startTimer();
+  }
+
+  function renderQuestion() {
+    const qData = quizQuestions[currentQuestionIdx];
+    document.getElementById('question-progress').innerText = `Soal ${currentQuestionIdx + 1} dari ${TOTAL_SOAL_DIUJI}`;
+    document.getElementById('question-text').innerText = `${currentQuestionIdx + 1}. ${qData.q}`;
+
+    const optionsBox = document.getElementById('options-box');
+    optionsBox.innerHTML = '';
+
+    qData.options.forEach((opt, idx) => {
+      const isSelected = userAnswers[currentQuestionIdx] === idx;
+      const btn = document.createElement('button');
+      btn.className = `option-btn ${isSelected ? 'selected' : ''}`;
+      btn.innerText = opt.text;
+      btn.onclick = () => selectOption(idx);
+      optionsBox.appendChild(btn);
+    });
+
+    document.getElementById('btn-prev').style.visibility = currentQuestionIdx === 0 ? 'hidden' : 'visible';
+    document.getElementById('btn-next').innerText = currentQuestionIdx === TOTAL_SOAL_DIUJI - 1 ? 'Selesai' : 'Lanjut';
+    
+    updateGridUI();
+  }
+
+  function selectOption(optionIndex) {
+    userAnswers[currentQuestionIdx] = optionIndex;
+    saveStateToLocalStorage();
+    renderQuestion();
+  }
+
+  function nextQuestion() {
+    if (currentQuestionIdx < TOTAL_SOAL_DIUJI - 1) {
+      currentQuestionIdx++;
+      renderQuestion();
+    } else {
+      confirmSubmit();
+    }
+  }
+
+  function prevQuestion() {
+    if (currentQuestionIdx > 0) {
+      currentQuestionIdx--;
+      renderQuestion();
+    }
+  }
+
+  function renderGrid() {
+    const gridBox = document.getElementById('grid-box');
+    gridBox.innerHTML = '';
+    for (let i = 0; i < TOTAL_SOAL_DIUJI; i++) {
+      const item = document.createElement('div');
+      item.id = `grid-item-${i}`;
+      item.className = 'grid-item';
+      item.innerText = i + 1;
+      item.onclick = () => {
+        currentQuestionIdx = i;
+        renderQuestion();
+      };
+      gridBox.appendChild(item);
+    }
+    updateGridUI();
+  }
+
+  function updateGridUI() {
+    for (let i = 0; i < TOTAL_SOAL_DIUJI; i++) {
+      const item = document.getElementById(`grid-item-${i}`);
+      if (!item) continue;
+      
+      item.className = 'grid-item';
+      if (userAnswers[i] !== undefined) item.classList.add('answered');
+      if (i === currentQuestionIdx) item.classList.add('active');
+    }
+  }
+
+  function toggleGrid() {
+    const gridBox = document.getElementById('grid-box');
+    gridBox.classList.toggle('hidden');
+  }
+
+  function startTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      timeRemaining--;
+      saveStateToLocalStorage();
+
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      document.getElementById('timer-display').innerText = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+      if (timeRemaining <= 0) {
+        clearInterval(timerInterval);
+        alert("Waktu habis! Kuis akan otomatis tersubmit.");
+        submitQuiz(true);
+      }
+    }, 1000);
+  }
+
+  function saveStateToLocalStorage() {
+    const sessionData = {
+      student: currentStudent,
+      questions: quizQuestions,
+      answers: userAnswers,
+      time: timeRemaining,
+      questionIdx: currentQuestionIdx,
+      violations: violationCount
+    };
+    localStorage.setItem('latihan7_quiz_state', JSON.stringify(sessionData));
+  }
+
+  function checkLocalStorageOnLoad() {
+    const saved = localStorage.getItem('latihan7_quiz_state');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (confirm(`Ditemukan sesi latihan aktif untuk ${data.student.nama}. Lanjutkan pengerjaan?`)) {
+          currentStudent = data.student;
+          quizQuestions = data.questions;
+          userAnswers = data.answers;
+          timeRemaining = data.time;
+          currentQuestionIdx = data.questionIdx;
+          violationCount = data.violations || 0;
+          initQuizUI();
+        } else {
+          localStorage.removeItem('latihan7_quiz_state');
+        }
+      } catch (e) {
+        localStorage.removeItem('latihan7_quiz_state');
+      }
+    }
+  }
+
+  function setupSecurityListeners() {
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('copy', e => e.preventDefault());
+    document.addEventListener('paste', e => e.preventDefault());
+    document.addEventListener('cut', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+      }
+    });
+
+    window.addEventListener('blur', triggerViolation);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) triggerViolation();
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && !document.getElementById('quiz-screen').classList.contains('hidden')) {
+        triggerViolation();
+      }
+    });
+  }
+
+  function requestFullScreen() {
+    const doc = document.documentElement;
+    if (doc.requestFullscreen) doc.requestFullscreen().catch(() => {});
+    else if (doc.mozRequestFullScreen) doc.mozRequestFullScreen();
+    else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+    else if (doc.msRequestFullscreen) doc.msRequestFullscreen();
+  }
+
+  function triggerViolation() {
+    if (document.getElementById('quiz-screen').classList.contains('hidden')) return;
+
+    violationCount++;
+    saveStateToLocalStorage();
+
+    if (violationCount >= 2) {
+      alert("Anda telah melanggar aturan keamanan kuis sebanyak 2 kali. Sistem akan otomatis mengirimkan jawaban Anda!");
+      submitQuiz(true);
+    } else {
+      document.getElementById('warning-text').innerText = `Pelanggaran Terdeteksi (${violationCount}/2)! Dilarang berpindah aplikasi, split screen, atau keluar dari fullscreen.`;
+      document.getElementById('warning-overlay').style.display = 'flex';
+    }
+  }
+
+  function dismissWarning() {
+    document.getElementById('warning-overlay').style.display = 'none';
+    requestFullScreen();
+  }
+
+  function confirmSubmit() {
+    const answeredCount = Object.keys(userAnswers).length;
+    if (answeredCount < TOTAL_SOAL_DIUJI) {
+      if (!confirm(`Anda baru menjawab ${answeredCount} dari ${TOTAL_SOAL_DIUJI} soal. Yakin ingin menyelesaikan latihan?`)) {
+        return;
+      }
+    } else {
+      if (!confirm("Yakin ingin menyelesaikan latihan ini?")) {
+        return;
+      }
+    }
+    submitQuiz(false);
+  }
+
+  function submitQuiz(isForceSubmit = false) {
+    clearInterval(timerInterval);
+
+    let correctCount = 0;
+    quizQuestions.forEach((q, idx) => {
+      const selectedOptionIdx = userAnswers[idx];
+      if (selectedOptionIdx !== undefined && q.options[selectedOptionIdx].isCorrect) {
+        correctCount++;
+      }
+    });
+
+    const finalScore = Math.round((correctCount / TOTAL_SOAL_DIUJI) * 100);
+
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('result-screen').classList.remove('hidden');
+    document.getElementById('result-score').innerText = finalScore;
+
+    const summaryBox = document.getElementById('result-summary');
+    summaryBox.innerHTML = `Mengirim data jawaban ke server, mohon tunggu...`;
+
+    const payload = {
+      nama: currentStudent.nama,
+      kelas: currentStudent.kelas,
+      nilaiAwal: currentStudent.nilaiAwal,
+      nilaiLatihan: finalScore,
+      kategori: "Latihan 7"
+    };
+
+    fetch(GAS_WEB_APP_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      const isLulus = finalScore >= KKM;
+      const finalStatus = isLulus ? "LULUS" : "BELUM LULUS";
+
+      document.getElementById('result-status').innerText = finalStatus;
+      document.getElementById('result-status').className = `status-badge ${isLulus ? 'lulus' : 'gagal'}`;
+
+      summaryBox.innerHTML = `
+        <strong>Siswa:</strong> ${currentStudent.nama} (${currentStudent.kelas})<br>
+        <strong>Nilai Latihan 7:</strong> ${finalScore}<br>
+        <strong>Target KKM:</strong> ${KKM}<br>
+        <strong>Status:</strong> ${finalStatus}<br><br>
+        <small>*Data hasil latihan telah berhasil tersimpan di Google Sheets Bu Mona.</small>
+      `;
+
+      localStorage.removeItem('latihan7_quiz_state');
+    })
+    .catch(err => {
+      summaryBox.innerHTML = `Terjadi kesalahan saat menyimpan ke Google Sheets: ${err}. Nilai Anda pada sesi ini: <strong>${finalScore}</strong>`;
+      localStorage.removeItem('latihan7_quiz_state');
+    });
+  }
+
+  function resetToLogin() {
+    location.reload();
+  }
+</script>
+</body>
+</html>
